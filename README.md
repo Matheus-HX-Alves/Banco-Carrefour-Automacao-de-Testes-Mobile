@@ -77,14 +77,16 @@ Screenshots
 Em caso de falha, o framework captura automaticamente um screenshot da tela do dispositivo e o anexa ao relatório Allure.
 
 # 📁 Estrutura de Pastas
+```
 .
-├── app/                  # Contém o arquivo wdio-demo.apk (Obrigatório)
-├── config/               # Arquivos de configuração por plataforma
-├── test/specs/           # Arquivos de testes (*.spec.js)
-├── allure-results/       # Dados brutos dos resultados (gerado após testes)
-├── .gitlab-ci.yml        # Configuração da Pipeline CI/CD
-├── wdio.base.conf.js     # Configuração base compartilhada
-└── package.json          # Scripts e dependências
+├── config/
+├── test/specs/
+├── allure-results/
+├── package.json
+├── wdio.base.conf.js
+└── README.md
+```
+
 # ⚠️ Observações Técnicas
 Porta do Appium: O projeto utiliza a porta padrão 4723.
 
