@@ -1,0 +1,30 @@
+# Dependências
+node_modules/
+ 
+# Relatórios e resultados de testes
+allure-results/
+allure-report/
+ 
+# Logs
+logs/
+*.log
+npm-debug.log*
+ 
+# Variáveis de ambiente
+.env
+.env.*
+ 
+# Sistema operacional
+.DS_Store
+Thumbs.db
+ 
+# IDEs
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+ 
+
+ 

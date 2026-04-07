@@ -1,0 +1,136 @@
+##############################################################################
+# CI/CD — Banco Carrefour · Automação de Testes Mobile
+# Stack: WebdriverIO 9 · Appium · Mocha · Allure
+# Runner: GitLab SaaS (gratuito) — Linux + Android Emulator
+##############################################################################
+
+stages:
+  - install
+  - test
+  - report
+
+variables:
+  APK_PATH: "$CI_PROJECT_DIR/app/wdio-demo.apk"
+  ANDROID_AVD_NAME: "sdk_gphone16k_x86_64"
+  ANDROID_PLATFORM_VERSION: "34"
+  ANDROID_SDK_ROOT: "/opt/android-sdk"
+
+##############################################################################
+# STAGE 1 — INSTALL
+##############################################################################
+install:dependencies:
+  stage: install
+  image: node:20-alpine
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules/
+    policy: push
+  script:
+    - echo "📦 Instalando dependências..."
+    - npm ci
+  only:
+    - merge_requests
+    - main
+    - develop
+
+##############################################################################
+# STAGE 2 — TEST ANDROID
+# Usa a imagem oficial do Google com Android SDK + emulador pré-instalados
+##############################################################################
+test:android:
+  stage: test
+  image: reactnativecommunity/react-native-android:latest
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules/
+    policy: pull
+  variables:
+    # Necessário para o emulador rodar dentro de container Docker
+    JAVA_HOME: "/usr/lib/jvm/java-17-openjdk-amd64"
+  before_script:
+    - echo "📦 Instalando Node.js e dependências..."
+    - curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+    - apt-get install -y nodejs
+    - npm ci
+
+    - echo "🤖 Instalando Appium..."
+    - npm install -g appium@latest
+    - appium driver install uiautomator2
+
+    - echo "📱 Criando AVD..."
+    - echo "no" | avdmanager create avd -n $ANDROID_AVD_NAME -k "system-images;android-${ANDROID_PLATFORM_VERSION};google_apis;x86_64" --force
+
+    - echo "🚀 Iniciando emulador em background..."
+    - emulator -avd $ANDROID_AVD_NAME -no-audio -no-window -gpu swiftshader_indirect -no-snapshot &
+
+    - echo "⏳ Aguardando boot do emulador..."
+    - adb wait-for-device
+    - |
+      for i in $(seq 1 30); do
+        BOOT=$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
+        if [ "$BOOT" = "1" ]; then
+          echo "✅ Emulador pronto!"
+          break
+        fi
+        echo "Aguardando... ($i/30)"
+        sleep 10
+      done
+
+    - echo "📲 Instalando APK..."
+    - adb install -r $APK_PATH
+
+  script:
+    - echo "🧪 Rodando testes Android..."
+    - npm run test:android
+
+  after_script:
+    - adb emu kill || true
+
+  artifacts:
+    when: always
+    paths:
+      - allure-results/
+    expire_in: 7 days
+
+  only:
+    - merge_requests
+    - main
+    - develop
+
+# ── iOS — desabilitado (requer runner macOS / plano pago) ────────────────────
+# test:ios:
+#   stage: test
+#   tags:
+#     - ios-simulator        # requer GitLab Premium ou runner macOS próprio
+#   script:
+#     - npm run test:ios
+
+##############################################################################
+# STAGE 3 — REPORT (Allure)
+##############################################################################
+report:allure:
+  stage: report
+  image: node:20-alpine
+  dependencies:
+    - test:android
+  before_script:
+    - npm install -g allure-commandline
+  script:
+    - echo "📊 Gerando relatório Allure..."
+    - allure generate allure-results --clean -o allure-report
+  artifacts:
+    when: always
+    paths:
+      - allure-report/
+    expose_as: "Allure Report"
+    expire_in: 30 days
+  only:
+    - merge_requests
+    - main
+    - develop
