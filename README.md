@@ -1,127 +1,91 @@
-# 📱 Banco Carrefour - Automação de Testes Mobile
+📱 Banco Carrefour - Automação de Testes Mobile
+Projeto de automação de testes para aplicações Android utilizando o ecossistema WebdriverIO 9 com Appium e relatórios Allure.
 
-Projeto de automação de testes mobile utilizando **WebdriverIO + Appium + Mocha + Allure**.
+🚀 Tecnologias e Versões
+Framework: WebdriverIO 9.
 
----
+Runner: Mocha.
 
-## 🚀 Tecnologias
+Driver: Appium (UIAutomator2).
 
-* WebdriverIO 9
-* Appium
-* Mocha
-* Allure Reporter
-* Node.js
+Relatórios: Allure Reporter.
 
----
+Linguagem: Node.js 20+ (ESM).
 
-## 📦 Pré-requisitos
+📦 Pré-requisitos
+Para rodar este projeto localmente, você precisa de:
 
-Antes de rodar o projeto, instale:
+Node.js: Versão 20 ou superior.
 
-* Node.js (>= 18)
-* Java JDK (>= 11)
-* Android Studio (com SDK configurado)
-* Emulador Android criado
+Java JDK: Versão 17 (recomendada para Android SDK 34).
 
----
+Android Studio: SDK configurado com as ferramentas de linha de comando.
 
-## ⚙️ Configuração do Ambiente
+Variáveis de Ambiente:
 
-```bash
-# Clonar o projeto
+ANDROID_HOME / ANDROID_SDK_ROOT
+
+JAVA_HOME
+
+Adicionar ao PATH: platform-tools, emulator e cmdline-tools.
+
+⚙️ Configuração do Projeto
+1. Clonar e Instalar
+Bash
+# Clone o repositório
 git clone <URL_DO_REPOSITORIO>
-cd Banco-Carrefour-Automacao-de-Testes-Mobile
 
-# Instalar dependências
+# Instale as dependências do Node.js
 npm install
 
-# Instalar Appium globalmente
+# Instale o Appium e o Driver Android globalmente
 npm install -g appium
 appium driver install uiautomator2
-```
+2. Adicionar o Aplicativo (APK)
+Para que o WebdriverIO localize o app, você deve criar uma pasta app na raiz e inserir o arquivo APK:
 
-### Variáveis de ambiente necessárias
+Caminho: ./app/wdio-demo.apk.
 
-* ANDROID_HOME
-* ANDROID_SDK_ROOT
-* JAVA_HOME
+Nota: O nome do arquivo deve coincidir com o configurado em wdio.android.conf.js.
 
----
+▶️ Execução dos Testes
+Localmente
+Certifique-se de que um emulador Android esteja aberto e funcional.
 
-## ▶️ Execução dos Testes
+Execute o comando:
 
-### Subir o emulador
-
-```bash
-emulator -avd <NOME_DO_EMULADOR>
-```
-
-### Rodar testes Android
-
-```bash
+Bash
 npm run test:android
-```
+No GitLab CI/CD
+A pipeline está configurada para rodar automaticamente em cada merge_request ou push para main/develop.
 
-### Rodar testes iOS (se aplicável)
+Ambiente: Utiliza a imagem reactnativecommunity/react-native-android.
 
-```bash
-npm run test:ios
-```
+Fluxo: Cria um AVD dinamicamente, inicia o emulador em background e executa os testes.
 
----
+📊 Relatórios e Evidências
+Allure Report
+O projeto gera relatórios detalhados com histórico de execução.
 
-## 📊 Relatórios (Allure)
+Gerar e abrir localmente:
 
-```bash
+Bash
 npm run report
-```
+No GitLab: O relatório é gerado como um artefato no estágio report:allure e fica disponível para download por 30 dias.
 
-* Gera resultados em `allure-results`
-* Abre automaticamente o relatório
+Screenshots
+Em caso de falha, o framework captura automaticamente um screenshot da tela do dispositivo e o anexa ao relatório Allure.
 
----
-
-## 📁 Estrutura do Projeto
-
-```
+📁 Estrutura de Pastas
 .
-├── config/
-├── test/specs/
-├── allure-results/
-├── package.json
-├── wdio.base.conf.js
-└── README.md
-```
+├── app/                  # Contém o arquivo wdio-demo.apk (Obrigatório)
+├── config/               # Arquivos de configuração por plataforma
+├── test/specs/           # Arquivos de testes (*.spec.js)
+├── allure-results/       # Dados brutos dos resultados (gerado após testes)
+├── .gitlab-ci.yml        # Configuração da Pipeline CI/CD
+├── wdio.base.conf.js     # Configuração base compartilhada
+└── package.json          # Scripts e dependências
+⚠️ Observações Técnicas
+Porta do Appium: O projeto utiliza a porta padrão 4723.
 
----
-
-## 🔄 CI/CD (GitLab)
-
-Pipeline configurado com:
-
-1. Instalação de dependências
-2. Execução dos testes Android (emulador)
-3. Geração de relatório Allure
-
-Arquivo:
-
-```
-.gitlab-ci.yml
-```
-
----
-
-## 📸 Evidências
-
-* Screenshot automático em caso de falha
-* Anexado no Allure
-
----
-
-## ⚠️ Observações
-
-* O APK deve estar no caminho configurado no projeto
-* O emulador precisa estar 100% iniciado
-* Driver utilizado: `uiautomator2`
-
----
+Timeout: O tempo limite para inicialização e conexão com o emulador é de 120 segundos para evitar falhas em ambientes de CI lentos.
