@@ -1,7 +1,7 @@
-📱 Banco Carrefour - Automação de Testes Mobile
+# 📱 Banco Carrefour - Automação de Testes Mobile
 Projeto de automação de testes para aplicações Android utilizando o ecossistema WebdriverIO 9 com Appium e relatórios Allure.
 
-🚀 Tecnologias e Versões
+# 🚀 Tecnologias e Versões
 Framework: WebdriverIO 9.
 
 Runner: Mocha.
@@ -12,7 +12,7 @@ Relatórios: Allure Reporter.
 
 Linguagem: Node.js 20+ (ESM).
 
-📦 Pré-requisitos
+# 📦 Pré-requisitos
 Para rodar este projeto localmente, você precisa de:
 
 Node.js: Versão 20 ou superior.
@@ -29,7 +29,7 @@ JAVA_HOME
 
 Adicionar ao PATH: platform-tools, emulator e cmdline-tools.
 
-⚙️ Configuração do Projeto
+# ⚙️ Configuração do Projeto
 1. Clonar e Instalar
 Bash
 # Clone o repositório
@@ -48,7 +48,7 @@ Caminho: ./app/wdio-demo.apk.
 
 Nota: O nome do arquivo deve coincidir com o configurado em wdio.android.conf.js.
 
-▶️ Execução dos Testes
+# ▶️ Execução dos Testes
 Localmente
 Certifique-se de que um emulador Android esteja aberto e funcional.
 
@@ -63,7 +63,7 @@ Ambiente: Utiliza a imagem reactnativecommunity/react-native-android.
 
 Fluxo: Cria um AVD dinamicamente, inicia o emulador em background e executa os testes.
 
-📊 Relatórios e Evidências
+# 📊 Relatórios e Evidências
 Allure Report
 O projeto gera relatórios detalhados com histórico de execução.
 
@@ -76,7 +76,7 @@ No GitLab: O relatório é gerado como um artefato no estágio report:allure e f
 Screenshots
 Em caso de falha, o framework captura automaticamente um screenshot da tela do dispositivo e o anexa ao relatório Allure.
 
-📁 Estrutura de Pastas
+# 📁 Estrutura de Pastas
 .
 ├── app/                  # Contém o arquivo wdio-demo.apk (Obrigatório)
 ├── config/               # Arquivos de configuração por plataforma
@@ -85,7 +85,7 @@ Em caso de falha, o framework captura automaticamente um screenshot da tela do d
 ├── .gitlab-ci.yml        # Configuração da Pipeline CI/CD
 ├── wdio.base.conf.js     # Configuração base compartilhada
 └── package.json          # Scripts e dependências
-⚠️ Observações Técnicas
+# ⚠️ Observações Técnicas
 Porta do Appium: O projeto utiliza a porta padrão 4723.
 
 Timeout: O tempo limite para inicialização e conexão com o emulador é de 120 segundos para evitar falhas em ambientes de CI lentos.
