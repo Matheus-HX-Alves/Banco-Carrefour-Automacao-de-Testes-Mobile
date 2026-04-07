@@ -79,10 +79,12 @@ Em caso de falha, o framework captura automaticamente um screenshot da tela do d
 # 📁 Estrutura de Pastas
 ```
 .
+├── app/
 ├── config/
 ├── test/specs/
 ├── allure-results/
 ├── package.json
+├── gitlab-ci.yml
 ├── wdio.base.conf.js
 └── README.md
 ```
